@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest # Usamos Linux por ser más rápido y barato en la nube
+    runs-on: ubuntu-latest
 
     steps:
       - name: Clonar el Repositorio
@@ -20,9 +20,13 @@ jobs:
           java-version: '21'
           distribution: 'corretto'
 
-      # PASO CLAVE: Forzamos el permiso de ejecución antes de llamar a Gradle
-      - name: Otorgar permisos de ejecución a Gradle Wrapper
-        run: chmod +x ./gradlew
+      # --- EL TRUCO EN LA NUBE ---
+      # Usamos el Gradle global de Ubuntu para crear el archivo gradlew en el momento,
+      # y automáticamente le damos permisos de ejecución en Linux.
+      - name: Generar Gradle Wrapper dinámicamente
+        run: |
+          gradle wrapper
+          chmod +x ./gradlew
 
       - name: Compilar y Ejecutar Tests Unitarios
         run: ./gradlew build --no-daemon
@@ -32,4 +36,4 @@ jobs:
         if: success()
         with:
           name: ZenithTeamsFabric-Mod
-          path: build/libs/*.jar # Atrapa cualquier versión del JAR
+          path: build/libs/*.jar
