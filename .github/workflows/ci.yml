@@ -1,0 +1,35 @@
+name: ZenithTeams CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Usamos Linux por ser más rápido y barato en la nube
+
+    steps:
+      - name: Clonar el Repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 21 (Corretto)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+
+      # PASO CLAVE: Forzamos el permiso de ejecución antes de llamar a Gradle
+      - name: Otorgar permisos de ejecución a Gradle Wrapper
+        run: chmod +x ./gradlew
+
+      - name: Compilar y Ejecutar Tests Unitarios
+        run: ./gradlew build --no-daemon
+
+      - name: Subir el .JAR generado como Artefacto
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: ZenithTeamsFabric-Mod
+          path: build/libs/*.jar # Atrapa cualquier versión del JAR

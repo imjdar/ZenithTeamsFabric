@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "zenithteamsfabric",
+  "version": "${version}",
+  "name": "ZenithTeamsFabric",
+  "description": "Advanced team management framework for Fabric P2P.",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/zenithteamsfabric/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.jdar.zenithteamsfabric.client.ZenithteamsfabricDataGenerator"
+    ],
+    "client": [
+      "com.jdar.zenithteamsfabric.client.ZenithteamsfabricClient"
+    ],
+    "main": [
+      "com.jdar.zenithteamsfabric.ZenithTeamsFabric"
+    ]
+  },
+  "mixins": [
+    "zenithteamsfabric.mixins.json",
+    {
+      "config": "zenithteamsfabric.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
